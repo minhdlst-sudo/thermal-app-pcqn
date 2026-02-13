@@ -5,7 +5,7 @@ import Login from './components/Login';
 import ThermalForm from './components/ThermalForm';
 import { submitThermalData } from './services/gasService';
 
-// Thay đổi URL này bằng URL triển khai (Deployment URL) từ Google Apps Script của bạn
+// Link Script kết nối với Google Sheet
 const GAS_URL = "https://script.google.com/macros/s/AKfycbypfttBiCS2KZ0aGEG91K87fIxD4gk4DubxTQELO_GBGrrxGX3cWkw9C1UOWSSQi3_nVA/exec"; 
 
 const App: React.FC = () => {
@@ -17,10 +17,6 @@ const App: React.FC = () => {
   const handleLogin = (unit: string) => {
     setUserUnit(unit);
     setView(ViewState.FORM);
-    
-    if (GAS_URL.includes("AKfycbwKceeanpJUGQ60aZPyWAaYUnvMWDrh11d-25vyiaqVsu87IHaidTyUvJzXcH7rycCUdg")) {
-      console.log("Cảnh báo: Đang sử dụng URL Google Apps Script mặc định.");
-    }
   };
 
   const handleSubmit = async (data: ThermalData): Promise<boolean> => {
@@ -31,9 +27,9 @@ const App: React.FC = () => {
     
     setIsSubmitting(false);
     if (result.success) {
-      setMessage({ type: 'success', text: result.message });
-      setTimeout(() => setMessage(null), 6000);
-      return true; // Trả về true để Form thực hiện xóa dữ liệu
+      setMessage({ type: 'success', text: "Đã đồng bộ dữ liệu thành công lên hệ thống!" });
+      setTimeout(() => setMessage(null), 5000);
+      return true;
     } else {
       setMessage({ type: 'error', text: result.message });
       return false;
@@ -43,70 +39,73 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center py-8 px-4 font-sans text-slate-900">
       <div className="max-w-xl w-full">
-        <header className="mb-8 text-center animate-fade-in">
-          <div className="inline-flex items-center justify-center p-3 bg-orange-100 rounded-2xl mb-4 shadow-sm">
-            <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <header className="mb-8 text-center">
+          <div className="inline-flex items-center justify-center p-3.5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl mb-4 shadow-lg shadow-blue-200">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Đo camera nhiệt - QNPC</h1>
-          <p className="text-slate-500 text-sm mt-1">Ghi nhận dữ liệu nhiệt độ & Phân tích AI</p>
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 leading-tight">
+              PCQN <span className="text-blue-600">Smart Thermal</span>
+            </h1>
+            <div className="flex items-center gap-2">
+              <span className="bg-blue-100 text-blue-700 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Chuyển đổi số</span>
+              <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+              <p className="text-slate-500 text-[10px] font-medium uppercase tracking-tight">Sổ tay Camera nhiệt thông minh</p>
+            </div>
+          </div>
         </header>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-2xl flex items-start gap-3 border shadow-sm transition-all animate-slide-down ${
+          <div className={`mb-6 p-4 rounded-2xl flex items-center gap-3 border shadow-sm transition-all animate-fadeIn ${
             message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
-            message.type === 'warning' ? 'bg-amber-50 text-amber-700 border-amber-100' :
             'bg-rose-50 text-rose-700 border-rose-100'
           }`}>
-            <div className="mt-0.5 shrink-0">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'success' ? 'bg-emerald-100' : 'bg-rose-100'}`}>
               {message.type === 'success' ? (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
               ) : (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               )}
             </div>
-            <span className="text-sm font-semibold">{message.text}</span>
+            <span className="text-sm font-bold">{message.text}</span>
           </div>
         )}
 
-        {view === ViewState.LOGIN && (
-          <Login onLogin={handleLogin} />
-        )}
+        {view === ViewState.LOGIN && <Login onLogin={handleLogin} />}
 
         {view === ViewState.FORM && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
+          <div className="space-y-4">
+            <div className="bg-white px-5 py-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700 font-black text-sm">
+                  {userUnit.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đơn vị công tác</p>
-                  <p className="font-bold text-slate-800 leading-tight">{userUnit}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Cán bộ từ đơn vị</p>
+                  <p className="font-bold text-slate-800 text-sm leading-none">{userUnit}</p>
                 </div>
               </div>
               <button 
-                onClick={() => setView(ViewState.LOGIN)}
-                className="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors uppercase tracking-wider"
+                onClick={() => setView(ViewState.LOGIN)} 
+                className="text-[10px] font-bold text-rose-500 uppercase px-3 py-2 bg-rose-50 rounded-lg active:scale-95 transition-all"
               >
-                Thoát
+                Đăng xuất
               </button>
             </div>
-
-            <ThermalForm 
-              unit={userUnit} 
-              onSubmit={handleSubmit} 
-              isSubmitting={isSubmitting} 
-            />
+            <ThermalForm unit={userUnit} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
           </div>
         )}
 
-        <footer className="mt-12 text-center text-slate-400 text-[11px] leading-relaxed px-4">
-          <p className="font-semibold text-slate-500 uppercase">Đo camera nhiệt - QNPC</p>
-          <p className="mt-1 opacity-75">Sử dụng Google Apps Script & Gemini AI - Không tốn phí vận hành</p>
-          <div className="mt-4 flex justify-center gap-4 grayscale opacity-50">
-             <div className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center font-bold">EVN</div>
+        <footer className="mt-10 text-center space-y-2">
+          <p className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">
+            © 2026 Phòng Kỹ thuật - QNPC
+          </p>
+          <div className="flex justify-center gap-4 opacity-30 grayscale">
+            {/* Logo EVNCPC or QNPC Placeholders */}
+            <div className="w-6 h-6 bg-slate-400 rounded-full"></div>
+            <div className="w-6 h-6 bg-slate-400 rounded-full"></div>
           </div>
         </footer>
       </div>
