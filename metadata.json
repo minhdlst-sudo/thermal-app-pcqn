@@ -1,0 +1,8 @@
+
+{
+  "name": "Đo camera nhiệt - QNPC",
+  "description": "Ứng dụng thu thập dữ liệu đo nhiệt độ camera nhiệt tại hiện trường lưới điện, đồng bộ trực tiếp với Google Sheets và Google Drive.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
